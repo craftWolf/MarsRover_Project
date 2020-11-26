@@ -42,9 +42,9 @@ begin
 
 controller 	: test_controller port map (clk => clk, reset => reset, count_in => count_out, pwm_reset => pwm_reset);
 
-count		: counter port map (clk => clk, reset => reset, count_out => count_out);
+count		: counter port map (clk => clk, reset => pwm_reset, count_out => count_out);
 
-pwm_gen 	: pwm_generator port map( clk => clk, reset => reset, direction => direction, count_in => count_out, pwm => pwm);
+pwm_gen 	: pwm_generator port map( clk => clk, reset => pwm_reset, direction => direction, count_in => count_out, pwm => pwm);
 
 
 end architecture structural;
