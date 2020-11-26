@@ -1,0 +1,9 @@
+# ignore all other type files
+*.wlf
+*.vstf
+*.bak
+*.mpf
+*.mti
+
+# Ignore the work folder
+**/work
