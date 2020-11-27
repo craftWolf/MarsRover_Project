@@ -12,7 +12,7 @@ entity simple_controller is
 		sensor_m		: in	std_logic;
 		sensor_r		: in	std_logic;
 
-		count_in		: in	std_logic_vector (?? downto 0);
+		count_in		: in	std_logic_vector (20 downto 0);
 		count_reset		: out	std_logic;
 
 		motor_l_reset		: out	std_logic;
@@ -21,7 +21,7 @@ entity simple_controller is
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic
 	);
-end entity tsimple_controller;
+end entity simple_controller;
 
 -- behavioural architecture of simple controller
 architecture behavioural of simple_controller is
