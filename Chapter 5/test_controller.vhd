@@ -39,7 +39,7 @@ begin
 			new_state <= wait_state;
 		when wait_state =>
 			PWM_RESET <= '0';
-			if (unsigned(count_in) > 2000000) then
+			if (unsigned(count_in) >= 2000000) then
 				new_state <= reset_state;
 			else
 				new_state <= wait_state;
