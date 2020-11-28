@@ -4,7 +4,7 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 -- entity controller
-entity CH5_controller is
+entity CH6_controller is
 	port (	clk			: in	std_logic;
 		reset			: in	std_logic;
 
@@ -21,14 +21,14 @@ entity CH5_controller is
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic
 	);
-end entity CH5_controller;
+end entity CH6_controller;
 
 -- behavioural architecture of controller
-architecture behavioural of CH5_controller is
+architecture behavioural of CH6_controller is
 
-type CH5_controller_state is (RESET_STATE, FORWARD, TURN_LEFT, SHARP_LEFT, TURN_RIGHT, SHARP_RIGHT);
+type CH6_controller_state is (RESET_STATE, FORWARD, TURN_LEFT, SHARP_LEFT, TURN_RIGHT, SHARP_RIGHT);
 
-signal state, new_state : Ch5_controller_state;
+signal state, new_state : CH6_controller_state;
 
 begin
 process(clk, reset)
@@ -127,7 +127,7 @@ begin
 			if (unsigned(count_in) >= 2000000) then
 				new_state <= RESET_STATE;
 			else
-				new_state <= TURN_RIGHT;
+				new_state <= SHARP_RIGHT;
 			end if;
 	end case;
 
