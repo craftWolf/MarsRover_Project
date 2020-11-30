@@ -40,15 +40,13 @@ begin
 	-- FORWARD, TURN_RIGHT, SHARP_RIGHT, SHARP_LEFT, TURN_LEFT, FORWARD
 	-- With two drive cycles of turn_left
 	sensor_l <= 	'1' after 0 ns,
-			'0' after 15 ms,
-			'1' after 35 ms, 
 			'0' after 55 ms;
 	sensor_m <=	'1' after 0 ms,
 			'0' after 35 ms, 
 			'1' after 85 ms,
 			'0' after 105 ms;
 	sensor_r <= 	'1' after 0 ms,
-			'0' after 35 ms, 
+			'0' after 15 ms, 
 			'1' after 55 ms,
 			'0' after 105 ms;
 
