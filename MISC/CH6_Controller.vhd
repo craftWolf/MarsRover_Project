@@ -51,16 +51,16 @@ begin
 			motor_r_reset <= '1';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
-			if (sensor_l = '0' and sensor_m = '1' and sensor_r = '1') then
+			if (sensor_l = '0' and sensor_m = '0' and sensor_r = '1') then
 				new_state <= TURN_LEFT;
 				else
-					if (sensor_l = '0' and sensor_m = '0' and sensor_r = '1') then
+					if (sensor_l = '0' and sensor_m = 1' and sensor_r = '1') then
 						new_state <= SHARP_LEFT;
 				else
-					if (sensor_l = '1' and sensor_m = '1' and sensor_r = '0') then
+					if (sensor_l = '1' and sensor_m = '0' and sensor_r = '0') then
 						new_state <= TURN_RIGHT;
 				else
-					if (sensor_l = '1' and sensor_m = '0' and sensor_r = '0') then
+					if (sensor_l = '1' and sensor_m = '1' and sensor_r = '0') then
 						new_state <= SHARP_RIGHT;
 				else
 						new_state <= FORWARD;
