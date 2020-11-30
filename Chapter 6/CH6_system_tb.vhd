@@ -37,17 +37,17 @@ begin
 			'0' after 1 ms,
 			'1' after 150 ms;
 	-- Change sensor values such that drive states are cycle in the following order
-	-- FORWARD, TURN_RIGHT, SHARP_RIGHT, SHARP_LEFT, TURN_LEFT, FORWARD
+	-- FORWARD (1,1,1), TURN_RIGHT (1,0,0), SHARP_RIGHT(1, 1, 0), SHARP_LEFT (0, 1, 1), TURN_LEFT (0,0,1), FORWARD (0, 0, 0)
 	-- With two drive cycles of turn_left
 	sensor_l <= 	'1' after 0 ns,
 			'0' after 55 ms;
 	sensor_m <=	'1' after 0 ms,
-			'0' after 35 ms, 
-			'1' after 85 ms,
-			'0' after 105 ms;
+			'0' after 15 ms, 
+			'1' after 35 ms, 
+			'0' after 85 ms;
 	sensor_r <= 	'1' after 0 ms,
 			'0' after 15 ms, 
-			'1' after 55 ms,
+			'1' after 55 ms, 
 			'0' after 105 ms;
 
 system : CH6_system port map  (	clk => clk, 			
