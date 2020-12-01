@@ -27,7 +27,7 @@ end entity CH7_Line_Finder;
 -- behavioural architecture of controller
 architecture behavioural of CH7_Line_finder is
 
-type CH7_controller_state is (FIND_LINE, PASS_LINE, SHARP_LEFT, SHARP_RIGHT, FOUND_LINE, RESET_STATE);
+type CH7_controller_state is (FIND_LINE, PASS_LINE, SHARP_LEFT, SHARP_RIGHT, FOUND_LINE);
 
 signal state, new_state : CH7_controller_state;
 signal last_input, new_last_input	: std_logic_vector(2 downto 0);
@@ -38,20 +38,25 @@ process(clk, reset, sensor_l, sensor_m, sensor_r)
 begin
 		if (rising_edge(clk)) then
 			if (reset = '1') then
-				state <= RESET_STATE;
+				state <= FIND_LINE;
 				last_input	<= "111";
 				count_reset <= '1';
 			else
-				
+
 				if (unsigned(count_in) >= 2000000) then
 					count_reset <= '1';
 					state 		<= new_state;
+					if (sensor_l /= '1' and sensor_m /= '1' and sensor_r /= '1') then
+						last_input	<= new_last_input;
+					end if;
 				else
 					count_reset <= '0';
 					if (sensor_l /= '1' and sensor_m /= '1' and sensor_r /= '1') then
 						last_input	<= new_last_input;
 					end if;
 				end if;
+				
+				
 			end if;
 		end if;
 end process;
@@ -61,12 +66,12 @@ begin
 	line_found <=  '0';
 	--count_reset <= '0';
 	case state is
-		when RESET_STATE =>
-			motor_l_reset <= '1';
-			motor_r_reset <= '1';
-			motor_l_direction <= '0';
-			motor_r_direction <= '0';
-			new_state <= FIND_LINE;
+--		when RESET_STATE =>
+--			motor_l_reset <= '1';
+--			motor_r_reset <= '1';
+--			motor_l_direction <= '0';
+--			motor_r_direction <= '0';
+--			new_state <= FIND_LINE;
 			
 			
 		when FIND_LINE =>
@@ -144,7 +149,7 @@ begin
 			motor_r_direction <= '0';
 			line_found	<= '1';
 			if (sensor_l = '1' and sensor_m = '1' and sensor_r = '1') then
-				new_state	<= RESET_STATE;
+				new_state	<= FIND_LINE;
 			else
 				new_state	<= FOUND_LINE;
 			end if;
