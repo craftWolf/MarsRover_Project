@@ -136,7 +136,7 @@ begin
 			if (sensor_l = '1' and sensor_m = '1' and sensor_r = '1') then
 				new_state <= SHARP_RIGHT;
 			else 
-				new_state <= Find_line;
+				new_state <= FOUND_LINE;
 			end if;
 
 		when FOUND_LINE =>
