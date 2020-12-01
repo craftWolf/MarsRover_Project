@@ -40,6 +40,7 @@ begin
 			if (reset = '1') then
 				state <= FIND_LINE;
 				last_input	<= "111";
+				count_reset <= '1';
 			else
 				
 				if (unsigned(count_in) >= 2000000) then
