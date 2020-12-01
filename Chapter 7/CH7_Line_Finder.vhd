@@ -143,6 +143,11 @@ begin
 			motor_l_direction <= '0';
 			motor_r_direction <= '0';
 			line_found	<= '1';
+			if (sensor_l = '1' and sensor_m = '1' and sensor_r = '1') then
+				new_state	<= RESET_STATE;
+			else
+				new_state	<= FOUND_LINE;
+			end if;
 	end case;
 
 
