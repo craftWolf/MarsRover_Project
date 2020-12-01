@@ -43,7 +43,7 @@ begin
 			else
 				state 		<= new_state;
 				if (unsigned(count_in) >= 2000000) then
-					count_reset <= '0';
+					count_reset <= '1';
 				elsif (sensor_l /= '1' and sensor_m /= '1' and sensor_r /= '1') then
 					last_input	<= new_last_input;
 				end if;
@@ -54,15 +54,16 @@ end process;
 
 process(state, sensor_l, sensor_m, sensor_r, count_in)
 begin 
+	line_found <=  '0';
+	count_reset <= '0';
 	case state is
 			
 		when FIND_LINE =>
-			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '0';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
-			line_found	<= '0';
+
 			new_last_input(0) <= sensor_l;
 			new_last_input(1) <= sensor_m;
 			new_last_input(2) <= sensor_r;
@@ -76,12 +77,10 @@ begin
 			end if;
 
 		when PASS_LINE =>
-			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '0';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
-			line_found	<= '0';
 			new_last_input(0) <= sensor_l;
 			new_last_input(1) <= sensor_m;
 			new_last_input(2) <= sensor_r;
@@ -96,12 +95,11 @@ begin
 
 
 		when SHARP_LEFT =>
-			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '0';
 			motor_l_direction <= '0';
 			motor_r_direction <= '1';
-			line_found	<= '0';
+
 			new_last_input(0) <= sensor_l;
 			new_last_input(1) <= sensor_m;
 			new_last_input(2) <= sensor_r;
@@ -114,12 +112,10 @@ begin
 	
 	
 		when SHARP_RIGHT =>
-			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '0';
 			motor_l_direction <= '1';
 			motor_r_direction <= '0';
-			line_found	<= '0';
 			new_last_input(0) <= sensor_l;
 			new_last_input(1) <= sensor_m;
 			new_last_input(2) <= sensor_r;
@@ -131,7 +127,6 @@ begin
 			end if;
 
 		when FOUND_LINE =>
-			count_reset <= '0';
 			motor_l_reset <= '1';
 			motor_r_reset <= '1';
 			motor_l_direction <= '0';
