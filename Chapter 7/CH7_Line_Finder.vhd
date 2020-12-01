@@ -46,12 +46,9 @@ begin
 				if (unsigned(count_in) >= 2000000) then
 					count_reset <= '1';
 					state 		<= new_state;
-					if (sensor_l /= '1' and sensor_m /= '1' and sensor_r /= '1') then
-						last_input	<= new_last_input;
-					end if;
 				else
 					count_reset <= '0';
-					if (sensor_l /= '1' and sensor_m /= '1' and sensor_r /= '1') then
+					if (sensor_l /= '1' or sensor_m /= '1' or sensor_r /= '1') then
 						last_input	<= new_last_input;
 					end if;
 				end if;
