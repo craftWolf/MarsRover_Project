@@ -40,6 +40,7 @@ begin
 			line_finder_reset <= '1';
 			line_tracker_reset <= '1';
 		 	sel <= '0';
+			new_state <= Line_Finder;
 	
 		when Line_Finder =>
 			line_finder_reset <= '0';
@@ -49,7 +50,6 @@ begin
 			--- reset the line_tracker to make sure they are synced
 			if line_found = '1' then
 				new_state <= Line_Tracker;
-				line_tracker_reset <= '1';
 			else 
 				new_state <= Line_Finder;
 			end if;
