@@ -3,11 +3,11 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 use IEEE.math_real.all;
 
-entity ch6_controller_tb is
-end ch6_controller_tb;
+entity line_tracker_tb is
+end line_tracker_tb;
 
-architecture mixed of ch6_controller_tb is
-component CH6_controller is
+architecture mixed of line_tracker_tb is
+component line_tracker is
 	port (	clk			: in  std_logic;
 		reset			: in  std_logic;
 
@@ -24,7 +24,7 @@ component CH6_controller is
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic
 	);
-end component CH6_controller;
+end component line_tracker;
 
 signal clk		: std_logic;
 signal reset		: std_logic;
@@ -78,7 +78,7 @@ begin
 
 
 
-system : CH6_controller port map (	clk => clk, 
+system : line_tracker port map (	clk => clk, 
 					reset => reset, 
 					sensor_l => sensor_l, 
 					sensor_m => sensor_m, 
@@ -88,8 +88,7 @@ system : CH6_controller port map (	clk => clk,
 					motor_l_reset => motor_l_reset,
 					motor_l_direction => motor_l_direction,
 					motor_r_reset => motor_r_reset,
-					motor_r_direction => motor_r_direction
-						
+					motor_r_direction => motor_r_direction	
 				);
 
 SIM_STOP: process
