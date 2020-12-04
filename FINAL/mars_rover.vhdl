@@ -3,20 +3,20 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 
 
-entity rover_entity is
+entity Mars_Rover is
     port( input_clk: in std_logic;
           input_reset: in std_logic;
           input_sensor: in std_logic_vector (2 downto 0);
           output_pwm_left: out std_logic;
           output_pwm_right: out std_logic);
-end entity rover_entity;
+end entity Mars_Rover;
 
 -- Top level Architecture
-architecture structural of rover_entity is
+architecture structural of Mars_rover is
     -- Declaration of the rover_entity components
 
     -- Input Buffer
-    component bitRegister is
+    component input_buffer is
       port (	clk		: in	std_logic;
 
     		sensor_l_in	: in	std_logic;
@@ -27,7 +27,7 @@ architecture structural of rover_entity is
     		sensor_m_out	: out	std_logic;
     		sensor_r_out	: out	std_logic
     	);
-    end component bitRegister;
+    end component input_buffer;
 
     -- Controller
     component controller is
@@ -81,7 +81,7 @@ architecture structural of rover_entity is
 
 begin
 
-    lbl1: bitRegister port map ( clk => input_clk,
+    lbl1: input_buffer port map ( clk => input_clk,
 
                                   sensor_l_in => input_sensor(0),
                                   sensor_m_in => input_sensor(1),
