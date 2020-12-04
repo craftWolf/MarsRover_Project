@@ -4,7 +4,7 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 -- entity controller
-entity CH7_Line_Finder is
+entity line_finder is
 	port (	clk			: in	std_logic;
 		reset			: in	std_logic;
 
@@ -22,14 +22,14 @@ entity CH7_Line_Finder is
 		motor_r_direction	: out	std_logic;
 		Line_found		: out	std_logic
 	);
-end entity CH7_Line_Finder;
+end entity line_finder;
 
 -- behavioural architecture of controller
-architecture behavioural of CH7_Line_finder is
+architecture behavioural of line_finder is
 
-type CH7_controller_state is (FIND_LINE, PASS_LINE, SHARP_LEFT, SHARP_RIGHT, FOUND_LINE, RESET_STATE);
+type finder_controller_state is (FIND_LINE, PASS_LINE, SHARP_LEFT, SHARP_RIGHT, FOUND_LINE, RESET_STATE);
 
-signal state, new_state, previous_state : CH7_controller_state;
+signal state, new_state, previous_state : finder_controller_state;
 signal last_input, new_last_input	: std_logic_vector(2 downto 0);
 
 

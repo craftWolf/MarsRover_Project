@@ -3,7 +3,7 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 -- entity track+find
-entity controller_comb is
+entity controller is
 	port (	clk			: in	std_logic;
 		reset			: in	std_logic;
 
@@ -20,11 +20,11 @@ entity controller_comb is
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic
 	);
-end entity controller_comb;
+end entity controller;
 
 
 -- architecture of the combine line tracker and founder
-architecture mixed of controller_comb is
+architecture mixed of controller is
 
   -- extra signal needed for the CH7_Line_Finder
   signal int_Line_found	: std_logic;
@@ -42,7 +42,7 @@ architecture mixed of controller_comb is
   end component mux2;
 
   -- entity controller Line Finder
-  component CH7_Line_Finder is
+  component line_finder is
   	port (	clk			: in	std_logic;
   		reset			: in	std_logic;
 
@@ -60,10 +60,10 @@ architecture mixed of controller_comb is
   		motor_r_direction	: out	std_logic;
   		Line_found		: out	std_logic
   	);
-  end component CH7_Line_Finder;
+  end component line_finder;
 
   -- entity controller Line Tracker
-  component CH6_controller is
+  component line_tracker is
   	port (	clk			: in	std_logic;
   		reset			: in	std_logic;
 
@@ -80,7 +80,7 @@ architecture mixed of controller_comb is
   		motor_r_reset		: out	std_logic;
   		motor_r_direction	: out	std_logic
   	);
-  end component CH6_controller;
+  end component line_tracker;
 
   component Main_Controller is
 	port (	clk			: in	std_logic;
@@ -95,7 +95,7 @@ architecture mixed of controller_comb is
 
 begin
 
-lbl1: CH6_controller port map (	clk => clk,
+lbl1: line_tracker port map (	clk => clk,
   					reset => int_line_tracker_reset,
   					sensor_l => sensor_l,
   					sensor_m => sensor_m,
@@ -109,7 +109,7 @@ lbl1: CH6_controller port map (	clk => clk,
   					motor_r_direction => int_tracker_vector(4)
             );
 
-lbl2: CH7_Line_Finder port map (	clk => clk,
+lbl2: line_finder port map (	clk => clk,
   					reset => int_line_finder_reset,
   					sensor_l => sensor_l,
   					sensor_m => sensor_m,
