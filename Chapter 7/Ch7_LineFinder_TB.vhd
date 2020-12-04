@@ -74,19 +74,19 @@ begin
 
 	count_in <=	std_logic_vector(to_unsigned(0, count_in'length))		after 0 ms,
 			std_logic_vector(to_unsigned(2000001, count_in'length))		after 20 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 20.000005 ms,
+			std_logic_vector(to_unsigned(0, count_in'length))		after 20.00001 ms,
 			std_logic_vector(to_unsigned(2000001, count_in'length))		after 40 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 40.000005 ms,
+			std_logic_vector(to_unsigned(0, count_in'length))		after 40.00001 ms,
 			std_logic_vector(to_unsigned(2000001, count_in'length))		after 60 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 60.000005 ms,
+			std_logic_vector(to_unsigned(0, count_in'length))		after 60.00001 ms,
 			std_logic_vector(to_unsigned(2000001, count_in'length))		after 80 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 80.000005 ms,
+			std_logic_vector(to_unsigned(0, count_in'length))		after 80.00001 ms,
 			std_logic_vector(to_unsigned(2000001, count_in'length))		after 100 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 100.000005 ms,
+			std_logic_vector(to_unsigned(0, count_in'length))		after 100.00001 ms,
 			std_logic_vector(to_unsigned(2000001, count_in'length))		after 120 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 120.000005 ms,
+			std_logic_vector(to_unsigned(0, count_in'length))		after 120.00001 ms,
 			std_logic_vector(to_unsigned(2000001, count_in'length))		after 140 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 140.000005 ms;
+			std_logic_vector(to_unsigned(0, count_in'length))		after 140.00001 ms;
 
 
 

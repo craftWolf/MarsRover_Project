@@ -158,7 +158,7 @@ begin
 			if (unsigned(count_in) >= 2000000) then
 				new_state <= RESET_STATE;
 			else
-				new_state <= FIND_LINE;
+				new_state <= SHARP_RIGHT;
 			end if;
 	
 
