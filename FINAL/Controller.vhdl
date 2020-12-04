@@ -45,6 +45,7 @@ architecture mixed of controller is
   component line_finder is
   	port (	clk			: in	std_logic;
   		reset			: in	std_logic;
+		line_finder_reset	: in 	std_logic;
 
   		sensor_l		: in	std_logic;
   		sensor_m		: in	std_logic;
@@ -66,6 +67,7 @@ architecture mixed of controller is
   component line_tracker is
   	port (	clk			: in	std_logic;
   		reset			: in	std_logic;
+		line_tracker_reset	: in 	std_logic;
 
   		sensor_l		: in	std_logic;
   		sensor_m		: in	std_logic;
@@ -96,7 +98,8 @@ architecture mixed of controller is
 begin
 
 lbl1: line_tracker port map (	clk => clk,
-  					reset => int_line_tracker_reset,
+  					reset => reset,
+					line_tracker_reset => int_line_tracker_reset,
   					sensor_l => sensor_l,
   					sensor_m => sensor_m,
   					sensor_r => sensor_r,
@@ -110,7 +113,8 @@ lbl1: line_tracker port map (	clk => clk,
             );
 
 lbl2: line_finder port map (	clk => clk,
-  					reset => int_line_finder_reset,
+  					reset => reset,
+					line_finder_reset => int_line_finder_reset,
   					sensor_l => sensor_l,
   					sensor_m => sensor_m,
   					sensor_r => sensor_r,

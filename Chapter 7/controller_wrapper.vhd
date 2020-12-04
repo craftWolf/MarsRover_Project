@@ -28,7 +28,7 @@ entity controller_wrapper is
 end entity controller_wrapper;
 
 architecture structural of controller_wrapper is
-component controller_comb is
+component controller is
 	port (	clk			: in	std_logic;
 		reset			: in	std_logic;
 
@@ -45,7 +45,7 @@ component controller_comb is
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic
 	);
-end component controller_comb;
+end component controller;
 -- Declare your controller
 
 	
@@ -55,7 +55,7 @@ end component controller_comb;
 begin
 
 -- Map the controller to the wrapper
-WRAP: controller_comb port map (	clk => clk,
+WRAP: controller port map (	clk => clk,
   					reset => reset,
   					sensor_l => sensor_l,
   					sensor_m => sensor_m,

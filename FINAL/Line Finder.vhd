@@ -6,7 +6,8 @@ use IEEE.numeric_std.all;
 -- entity controller
 entity line_finder is
 	port (	clk			: in	std_logic;
-		reset			: in	std_logic;
+		reset			: in	std_logic; -- hard rest
+		line_finder_reset	: in 	std_logic; -- reset coming from the main controller
 
 		sensor_l		: in	std_logic;
 		sensor_m		: in	std_logic;
@@ -38,7 +39,7 @@ begin
 process(clk, reset, sensor_l, sensor_m, sensor_r)
 begin
 		if (rising_edge(clk)) then
-			if (reset = '1') then
+			if (reset = '1' or line_finder_reset = '1') then
 				state <= RESET_STATE;
 				last_input	<= "111";
 				--previous_state <= RESET_STATE;

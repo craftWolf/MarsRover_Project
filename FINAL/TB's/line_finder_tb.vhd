@@ -8,13 +8,14 @@ end line_finder_tb;
 
 architecture mixed of line_finder_tb is
 component line_finder is
-	port (	clk			: in  std_logic;
-		reset			: in  std_logic;
+	port (	clk			: in	std_logic;
+		reset			: in	std_logic; -- hard rest
+		line_finder_reset	: in 	std_logic; -- reset coming from the main controller
 
-		sensor_l		: in  std_logic;
-		sensor_m		: in  std_logic;
-		sensor_r		: in  std_logic;
-		
+		sensor_l		: in	std_logic;
+		sensor_m		: in	std_logic;
+		sensor_r		: in	std_logic;
+
 		count_in		: in	std_logic_vector (20 downto 0);
 		count_reset		: out	std_logic;
 
@@ -23,13 +24,13 @@ component line_finder is
 
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic;
-
-		line_found		: out 	std_logic
+		Line_found		: out	std_logic
 	);
 end component line_finder;
 
 signal clk		: std_logic;
 signal reset		: std_logic;
+signal line_finder_reset : std_logic;
 signal sensor_l		: std_logic;
 signal sensor_m		: std_logic;
 signal sensor_r		: std_logic;
@@ -48,11 +49,13 @@ begin
 	-- Reset until 1 ms to make wave diagram easier to look at
 	reset 	<= 	'0' after 0 ns,
 			'1' after 40 ns,
-			'0' after 1 ms,
-			'1' after 22 ms,
-			'0' after 23 ms,
-			'1' after 85 ms,
-			'0' after 87 ms;
+			'0' after 1 ms;
+			
+	line_finder_reset <= 	'0' after 0 ns,
+				'1' after 22 ms,
+				'0' after 23 ms,
+				'1' after 85 ms,
+				'0' after 87 ms;
 			
 	-- Change sensor values such that drive states are cycle in the following order
 	-- FORWARD, TURN_RIGHT, SHARP_RIGHT, SHARP_LEFT, TURN_LEFT, FORWARD
@@ -93,6 +96,7 @@ begin
 
 system : line_finder port map (	clk => clk, 
 					reset => reset, 
+					line_finder_reset => line_finder_reset,
 					sensor_l => sensor_l, 
 					sensor_m => sensor_m, 
 					sensor_r => sensor_r,
