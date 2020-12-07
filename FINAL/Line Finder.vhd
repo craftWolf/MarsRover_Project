@@ -78,7 +78,7 @@ begin
 			elsif (previous_state = PASS_LINE) then
 				if (sensor_l /= '1' OR sensor_m /= '1' OR sensor_r /= '1') then
 					new_state <= PASS_LINE;
-				elsif (sensor_l = '1' and sensor_r = '0') then
+				elsif (last_input(0) = '1' and last_input(2) = '0') then
 					new_state <= SHARP_RIGHT;
 				else
 					new_state <= SHARP_LEFT;				
