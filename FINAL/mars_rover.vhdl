@@ -72,8 +72,10 @@ architecture structural of Mars_rover is
     signal internal_sensor_controller_3: std_logic_vector(2 downto 0);
 
     signal internal_controller_pwm_l_2: std_logic_vector(1 downto 0);
-    signal internal_controller_pwm_r_2: std_logic_vector(1 downto 0);
+    signal internal_controller_pwm_r_2_reset: std_logic;
+    signal internal_controller_pwm_r_2_dir : std_logic;
     signal internal_controller_counter: std_logic;
+    signal inv_internal_controller_pwm_r_2_dir : std_logic;
 
     signal internal_counter_x_x: std_logic_vector(20 downto 0);
 
@@ -105,8 +107,8 @@ begin
                                 motor_l_reset => internal_controller_pwm_l_2(0),
                                 motor_l_direction => internal_controller_pwm_l_2(1),
 
-                                motor_r_reset => internal_controller_pwm_r_2(0),
-                                motor_r_direction => internal_controller_pwm_r_2(1)
+                                motor_r_reset => internal_controller_pwm_r_2_reset,
+                                motor_r_direction => internal_controller_pwm_r_2_dir
 );
 
   lbl3: counter port map (  clk => input_clk,
@@ -122,11 +124,12 @@ begin
                                   pwm => output_pwm_left
 );
 
+inv_internal_controller_pwm_r_2_dir <= not internal_controller_pwm_r_2_dir;
   -- Right PWM
   lbl5: pwm_generator port map (  clk => input_clk,
-                                  reset => internal_controller_pwm_r_2(0),
+                                  reset => internal_controller_pwm_r_2_reset,
 				  --- invert the direction since the motors are mirrored
-                                  direction => not internal_controller_pwm_r_2(1), 
+                                  direction => inv_internal_controller_pwm_r_2_dir, 
                                   count_in => internal_counter_x_x,
                                   pwm => output_pwm_right
 );
