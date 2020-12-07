@@ -58,12 +58,8 @@ begin
 				new_state <= PWM_LOW;
 			when PWM_RESET =>
 				pwm <= '0';
-				-- Transition to PWM_HIGH whenever reset is turned off;
-				if (reset = '0') then
-					new_state <= PWM_HIGH;
-				else
-					new_state <= PWM_RESET;
-				end if;
+				new_state <= PWM_HIGH;
+			
 		end case;
 	end process;
 end architecture behavioural;
