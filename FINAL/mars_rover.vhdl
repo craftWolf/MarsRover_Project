@@ -83,21 +83,21 @@ begin
 
     lbl1: input_buffer port map ( clk => input_clk,
 
-                                  sensor_l_in => input_sensor(0),
+                                  sensor_l_in => input_sensor(2),
                                   sensor_m_in => input_sensor(1),
-                                  sensor_r_in => input_sensor(2),
+                                  sensor_r_in => input_sensor(0),
 
-                                  sensor_l_out => internal_sensor_controller_3(0),
+                                  sensor_l_out => internal_sensor_controller_3(2),
                                   sensor_m_out => internal_sensor_controller_3(1),
-                                  sensor_r_out => internal_sensor_controller_3(2)
+                                  sensor_r_out => internal_sensor_controller_3(0)
 );
 
     lbl2: controller port map ( clk => input_clk,
                                 reset => input_reset,
 
-                                sensor_l => internal_sensor_controller_3(0),
+                                sensor_l => internal_sensor_controller_3(2),
                                 sensor_m => internal_sensor_controller_3(1),
-                                sensor_r => internal_sensor_controller_3(2),
+                                sensor_r => internal_sensor_controller_3(0),
 
                                 count_in => internal_counter_x_x,
                                 count_reset => internal_controller_counter,
