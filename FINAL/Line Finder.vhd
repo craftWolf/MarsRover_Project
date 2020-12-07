@@ -78,7 +78,7 @@ begin
 			elsif (previous_state = PASS_LINE) then
 				if (sensor_l /= '1' OR sensor_m /= '1' OR sensor_r /= '1') then
 					new_state <= PASS_LINE;
-				elsif (unsigned(last_input)= 6 or unsigned(last_input)=4) then
+				elsif (sensor_l = '1' and sensor_r = '0') then
 					new_state <= SHARP_RIGHT;
 				else
 					new_state <= SHARP_LEFT;				
