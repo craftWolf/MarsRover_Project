@@ -125,7 +125,8 @@ begin
   -- Right PWM
   lbl5: pwm_generator port map (  clk => input_clk,
                                   reset => internal_controller_pwm_r_2(0),
-                                  direction => internal_controller_pwm_r_2(1),
+				  --- invert the direction since the motors are mirrored
+                                  direction => not internal_controller_pwm_r_2(1), 
                                   count_in => internal_counter_x_x,
                                   pwm => output_pwm_right
 );
