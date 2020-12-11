@@ -20,7 +20,9 @@ architecture structural of Mars_rover is
 
     -- Input Buffer
     component input_buffer is
-      port (	clk		: in	std_logic;
+
+
+		port (	clk		: in	std_logic;
 
     		sensor_l_in	: in	std_logic;
     		sensor_m_in	: in	std_logic;
@@ -34,7 +36,11 @@ architecture structural of Mars_rover is
 
     -- Controller
     component controller is
-      port (	clk			: in	std_logic;
+	generic(
+  	  CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  		);
+
+	port (	clk			: in	std_logic;
     		reset			: in	std_logic;
 
     		sensor_l		: in	std_logic;
@@ -54,7 +60,11 @@ architecture structural of Mars_rover is
 
     -- Counter
     component counter is
-      port (	clk		: in	std_logic;
+	generic(
+  	  CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  		);
+
+	port (	clk		: in	std_logic;
     		reset		: in	std_logic;
 
     		count_out	: out	std_logic_vector (20 downto 0)
@@ -63,7 +73,11 @@ architecture structural of Mars_rover is
 
     -- PWM Generator
     component pwm_generator is
-      port (	clk		: in	std_logic;
+	generic(
+  	  CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  		);
+
+	port (	clk		: in	std_logic;
     		reset		: in	std_logic;
     		direction	: in	std_logic;
     		count_in	: in	std_logic_vector (20 downto 0);
