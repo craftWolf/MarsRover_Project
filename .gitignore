@@ -4,6 +4,24 @@
 *.bak
 *.mpf
 *.mti
+*.bat
+*.tcl
+*.ini
+*.m
+*.do
+*.slx
 
 # Ignore the work folder
 **/work
+**/slprj
+
+Chapter 8/EE3130TU_RoverSimulator_sfun.mexw64
+
+Chapter 8/EE3130TU_RoverSimulator.slx
+
+Chapter 8/EE3130TU_RoverSimulator.slx.r2019b
+
+Chapter 8/esl_rstclk_waveform.jpg
+
+Chapter 8/transcript
+

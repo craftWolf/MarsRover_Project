@@ -1,7 +1,7 @@
 %% Specify name of map
 % Maps can be found in the folder ./test tracks
 % Don't include the .jpg or .mat extention when you specify mapName.
-mapName = 'chapter_06_simple_turn';
+mapName = 'chapter_07_sharp_turn';
 
 % Map list:
 % mapName = 'chapter_06_simple_turn';
