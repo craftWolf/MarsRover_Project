@@ -37,7 +37,7 @@ CLK_GEN:  process is
 RST_GEN:  process is
           begin
             NRST <= '0';
-            wait for 20 ns;
+            wait for 2 ms;
             NRST <= '1';
             wait;
           end process;
