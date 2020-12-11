@@ -3,6 +3,9 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 entity pwm_generator is
+	generic(
+  		CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  	);
 	port ( 	clk 		: in STD_LOGIC;  -- clock signal
 		reset 		: in STD_LOGIC;  -- reset signal
 		direction 	: in STD_LOGIC;  -- '0' == left, '1' == right

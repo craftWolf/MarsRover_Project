@@ -89,20 +89,20 @@ reset <= not(NRST);
 -- *****************************************************************************
 
 -- Include your top-level here
+signal invert_reset: std_logic;
 
+invert_reset <= not reset;
 -- Example:
-DUT: entity work.robot
+DUT: entity Mars_Rover
       generic map(
         CLK_SCALE => CLK_SCALE
         )
       port map(
-        clk          => CLK,
-        reset_button => reset,
-        sensor_l_in  => ROS_IN(2),
-        sensor_m_in  => ROS_IN(1),
-        sensor_r_in  => ROS_IN(0),
-        motor_l_pwm  => pwm_l,
-        motor_r_pwm  => pwm_r
+        input_clk          	=> CLK,
+        input_reset 		=> invert_reset,
+        input_sensor 		=> ROS_IN,
+        output_pwm_left  	=> pwm_l,
+        output_pwm_right	=> pwm_r
         );
 
 -- *****************************************************************************

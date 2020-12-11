@@ -4,6 +4,9 @@ use IEEE.std_logic_1164.all;
 
 
 entity Mars_Rover is
+   generic(
+  	  CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  	);
     port( input_clk: in std_logic;
           input_reset: in std_logic;
           input_sensor: in std_logic_vector (2 downto 0);
@@ -94,7 +97,11 @@ begin
                                   sensor_r_out => internal_sensor_controller_3(0)
 );
 
-    lbl2: controller port map ( clk => input_clk,
+    lbl2: controller 
+			generic map(CLK_SCALE => CLK_SCALE)
+       			 	
+        		
+			port map ( clk => input_clk,
                                 reset => input_reset,
 
                                 sensor_l => internal_sensor_controller_3(2),
@@ -111,13 +118,17 @@ begin
                                 motor_r_direction => internal_controller_pwm_r_2_dir
 );
 
-  lbl3: counter port map (  clk => input_clk,
-                            reset => internal_controller_counter,
-                            count_out => internal_counter_x_x
+  lbl3: counter 	generic map(CLK_SCALE => CLK_SCALE)
+
+			port map (  clk => input_clk,
+                           	reset => internal_controller_counter,
+                           	count_out => internal_counter_x_x
 );
 
   -- Left PWM
-  lbl4: pwm_generator port map (  clk => input_clk,
+  lbl4: pwm_generator 	generic map(CLK_SCALE => CLK_SCALE)
+
+			port map (  clk => input_clk,
                                   reset => internal_controller_pwm_l_2(0),
                                   direction => internal_controller_pwm_l_2(1),
                                   count_in => internal_counter_x_x,
@@ -126,7 +137,9 @@ begin
 
 inv_internal_controller_pwm_r_2_dir <= not internal_controller_pwm_r_2_dir;
   -- Right PWM
-  lbl5: pwm_generator port map (  clk => input_clk,
+  lbl5: pwm_generator 	generic map(CLK_SCALE => CLK_SCALE)
+
+			port map (  clk => input_clk,
                                   reset => internal_controller_pwm_r_2_reset,
 				  --- invert the direction since the motors are mirrored
                                   direction => inv_internal_controller_pwm_r_2_dir, 

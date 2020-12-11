@@ -4,6 +4,9 @@ use IEEE.numeric_std.all;
 
 -- entity track+find
 entity controller is
+	generic(
+  		CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  	);
 	port (	clk			: in	std_logic;
 		reset			: in	std_logic;
 

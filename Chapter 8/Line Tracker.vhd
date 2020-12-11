@@ -5,6 +5,9 @@ use IEEE.numeric_std.all;
 
 -- entity controller
 entity line_tracker is
+	generic(
+  		CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  	);
 	port (	clk			: in	std_logic;
 		reset			: in	std_logic; -- hard reset
 		line_tracker_reset 	: in 	std_logic; -- reset coming from the main controller
@@ -76,7 +79,7 @@ begin
 			motor_r_reset <= '0';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
-			if (unsigned(count_in) >= 2000000) then
+			if (unsigned(count_in) >= 2000000/CLK_SCALE) then
 				new_state <= RESET_STATE;
 			else
 				new_state <= FORWARD;
@@ -89,7 +92,7 @@ begin
 			motor_r_reset <= '0';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
-			if (unsigned(count_in) >= 2000000) then
+			if (unsigned(count_in) >= 2000000/CLK_SCALE) then
 				new_state <= RESET_STATE;
 			else
 				new_state <= TURN_LEFT;
@@ -101,7 +104,7 @@ begin
 			motor_r_reset <= '0';
 			motor_l_direction <= '0';
 			motor_r_direction <= '1';
-			if (unsigned(count_in) >= 2000000) then
+			if (unsigned(count_in) >= 2000000/CLK_SCALE) then
 				new_state <= RESET_STATE;
 			else
 				new_state <= SHARP_LEFT;
@@ -113,7 +116,7 @@ begin
 			motor_r_reset <= '1';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
-			if (unsigned(count_in) >= 2000000) then
+			if (unsigned(count_in) >= 2000000/CLK_SCALE) then
 				new_state <= RESET_STATE;
 			else
 				new_state <= TURN_RIGHT;
@@ -125,7 +128,7 @@ begin
 			motor_r_reset <= '0';
 			motor_l_direction <= '1';
 			motor_r_direction <= '0';
-			if (unsigned(count_in) >= 2000000) then
+			if (unsigned(count_in) >= 2000000/CLK_SCALE) then
 				new_state <= RESET_STATE;
 			else
 				new_state <= SHARP_RIGHT;

@@ -4,6 +4,9 @@ use IEEE.numeric_std.all;
 
 
 entity counter is
+	generic(
+ 	 	CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+ 	);
 	port (	clk 		: in STD_LOGIC;
 		reset		: in STD_LOGIC;
 		count_out	: out STD_LOGIC_VECTOR(20 downto 0));
@@ -11,7 +14,10 @@ end counter;
 
 architecture behavioural of counter is
 signal count, new_count : STD_LOGIC_VECTOR(20 downto 0);
+signal new_CLK : std_logic;
 begin
+
+
 regis : process (clk)
 		begin
 		-- On rising edge on clock reset the counter or load new value.

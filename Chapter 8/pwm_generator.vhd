@@ -3,6 +3,9 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
 entity pwm_generator is
+	generic(
+  		CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  	);
 	port ( 	clk 		: in STD_LOGIC;  -- clock signal
 		reset 		: in STD_LOGIC;  -- reset signal
 		direction 	: in STD_LOGIC;  -- '0' == left, '1' == right
@@ -42,10 +45,10 @@ begin
 				-- Transition to PWM_LOW whenever the counter 
 				-- reaches 1ms if direction is left (0)
 				-- reaches 2ms if direction is right (1)
-				if (direction = '0' and (unsigned(count_in) > 100000)) then
+				if (direction = '0' and (unsigned(count_in)/CLK_SCALE > 100000/CLK_SCALE)) then
 					new_state <= PWM_LOW;
 				else 
-					if (direction = '1' and (unsigned(count_in) > 200000)) then
+					if (direction = '1' and (unsigned(count_in)/CLK_SCALE > 200000/CLK_SCALE)) then
 						new_state <= PWM_LOW;
 					else
 						new_state <= PWM_HIGH;
