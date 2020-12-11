@@ -23,7 +23,7 @@ architecture structural of Mars_rover is
 
 
 		port (	clk		: in	std_logic;
-
+		reset		: in 	std_logic;
     		sensor_l_in	: in	std_logic;
     		sensor_m_in	: in	std_logic;
     		sensor_r_in	: in	std_logic;
@@ -101,7 +101,7 @@ architecture structural of Mars_rover is
 begin
 
     lbl1: input_buffer port map ( clk => input_clk,
-
+				  reset => input_reset,
                                   sensor_l_in => input_sensor(2),
                                   sensor_m_in => input_sensor(1),
                                   sensor_r_in => input_sensor(0),

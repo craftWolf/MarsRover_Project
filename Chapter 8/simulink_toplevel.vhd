@@ -28,6 +28,16 @@ port(
 end simulink_toplevel;
 
 architecture mixed of simulink_toplevel is
+component Mars_Rover is
+   generic(
+  	  CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  	);
+    port( input_clk: in std_logic;
+          input_reset: in std_logic;
+          input_sensor: in std_logic_vector (2 downto 0);
+          output_pwm_left: out std_logic;
+          output_pwm_right: out std_logic);
+end component;
 
 -- *****************************************************************************
 -- SIGNAL DECLARATIONS
@@ -80,6 +90,7 @@ begin
   return cos_taylor;
 end cos;
 
+
 begin
 
 reset <= not(NRST);
@@ -89,17 +100,17 @@ reset <= not(NRST);
 -- *****************************************************************************
 
 -- Include your top-level here
-signal invert_reset: std_logic;
 
-invert_reset <= not reset;
+
+
 -- Example:
-DUT: entity Mars_Rover
+DUT: entity work.Mars_Rover
       generic map(
         CLK_SCALE => CLK_SCALE
         )
       port map(
         input_clk          	=> CLK,
-        input_reset 		=> invert_reset,
+        input_reset 		=> reset,
         input_sensor 		=> ROS_IN,
         output_pwm_left  	=> pwm_l,
         output_pwm_right	=> pwm_r
