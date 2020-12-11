@@ -46,6 +46,9 @@ architecture mixed of controller is
 
   -- entity controller Line Finder
   component line_finder is
+	generic(
+  		CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  	);
   	port (	clk			: in	std_logic;
   		reset			: in	std_logic;
 		line_finder_reset	: in 	std_logic;
@@ -68,6 +71,9 @@ architecture mixed of controller is
 
   -- entity controller Line Tracker
   component line_tracker is
+	generic(
+  		CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  	);
   	port (	clk			: in	std_logic;
   		reset			: in	std_logic;
 		line_tracker_reset	: in 	std_logic;
@@ -100,7 +106,9 @@ architecture mixed of controller is
 
 begin
 
-lbl1: line_tracker port map (	clk => clk,
+lbl1: line_tracker 
+			generic map(	CLK_SCALE => CLK_SCALE)			
+			port map (	clk => clk,
   					reset => reset,
 					line_tracker_reset => int_line_tracker_reset,
   					sensor_l => sensor_l,
@@ -115,7 +123,9 @@ lbl1: line_tracker port map (	clk => clk,
   					motor_r_direction => int_tracker_vector(4)
             );
 
-lbl2: line_finder port map (	clk => clk,
+lbl2: line_finder 
+			generic map(	CLK_SCALE => CLK_SCALE)	
+			port map (	clk => clk,
   					reset => reset,
 					line_finder_reset => int_line_finder_reset,
   					sensor_l => sensor_l,
