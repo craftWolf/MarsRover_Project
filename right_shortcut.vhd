@@ -48,7 +48,7 @@ begin
 		end if;
 end process;
 
-process(state, sensor_l, sensor_m, sensor_r)
+process(state, sensor_l, sensor_m, sensor_r, clk)
 begin 
 	case state is
 		when IDLE_STATE => 

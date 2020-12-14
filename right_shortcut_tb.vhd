@@ -10,7 +10,8 @@ architecture mixed of right_shortcut_tb is
 component right_shortcut is
 	port (	clk			: in  std_logic;
 		reset			: in  std_logic;
-
+		right_shortcut_reset 		: in 	std_logic; -- reset coming from the main controller
+		
 		sensor_l		: in  std_logic;
 		sensor_m		: in  std_logic;
 		sensor_r		: in  std_logic;
@@ -24,7 +25,7 @@ component right_shortcut is
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic;
 
-		right_shortcut_reset 		: in 	std_logic; -- reset coming from the main controller
+		
 		right_shortcut_signal		: out std_logic
 	);
 end component right_shortcut;
@@ -52,7 +53,8 @@ begin
 	reset 	<= 	'0' after 0 ns,
 			'1' after 40 ns,
 			'0' after 1 ms;
-			
+			--'1' after 20 ms;
+	right_shortcut_reset_in <= '0' after 0 ns, '1' after 200 ms;
 	-- Change sensor values such that drive states are cycle in the following order
 	sensor_l <= 	'1' after 0 ns,
 			'0' after 15 ms, -- 0 at 15
@@ -72,7 +74,7 @@ begin
 			'1' after 22 ms,
 			'0' after 65 ms,	
 			'1' after 115 ms,
-			'0' after 135 ms, -- 0  at 135
+			'0' after 142 ms, -- 0  at 135
 			'1' after 170 ms; -- 0  at 150
 			
 -- 010 at 15 ==> RightShortcut Signal
@@ -93,15 +95,15 @@ begin
 			std_logic_vector(to_unsigned(2000001, count_in'length))		after 120 ms,
 			std_logic_vector(to_unsigned(0, count_in'length))		after 120.00001 ms,
 			std_logic_vector(to_unsigned(2000001, count_in'length))		after 140 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 140.00001 ms,
-			std_logic_vector(to_unsigned(2000001, count_in'length))		after 160 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 161.00001 ms,
-			std_logic_vector(to_unsigned(2000001, count_in'length))		after 180 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 181.00001 ms,
-			std_logic_vector(to_unsigned(2000001, count_in'length))		after 200 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 201.00001 ms,
-			std_logic_vector(to_unsigned(2000001, count_in'length))		after 220 ms,
-			std_logic_vector(to_unsigned(0, count_in'length))		after 220.00001 ms;
+			std_logic_vector(to_unsigned(0, count_in'length))		after 140.00001 ms;
+			-- std_logic_vector(to_unsigned(2000001, count_in'length))		after 160 ms,
+			-- std_logic_vector(to_unsigned(0, count_in'length))		after 161.00001 ms,
+			-- std_logic_vector(to_unsigned(2000001, count_in'length))		after 180 ms,
+			-- std_logic_vector(to_unsigned(0, count_in'length))		after 181.00001 ms,
+			-- std_logic_vector(to_unsigned(2000001, count_in'length))		after 200 ms,
+			-- std_logic_vector(to_unsigned(0, count_in'length))		after 201.00001 ms,
+			-- std_logic_vector(to_unsigned(2000001, count_in'length))		after 220 ms,
+			-- std_logic_vector(to_unsigned(0, count_in'length))		after 220.00001 ms;
 
 
 system : right_shortcut port map (	clk => clk, 
