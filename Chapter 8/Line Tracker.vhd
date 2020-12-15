@@ -33,7 +33,7 @@ end entity line_tracker;
 -- behavioural architecture of controller
 architecture behavioural of line_tracker is
 
-type tracker_controller_state is (RESET_STATE, FORWARD, TURN_LEFT, SHARP_LEFT, TURN_RIGHT, SHARP_RIGHT);
+type tracker_controller_state is (RESET_STATE, FORWARD, TURN_LEFT, SHARP_LEFT, TURN_RIGHT, SHARP_RIGHT, FOUND_TURN);
 
 signal state, new_state : tracker_controller_state;
 signal check: std_logic; --checks whether we have moveded on from the turn signal
@@ -66,8 +66,9 @@ turn_found <= '0';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
 			if (check = '0' and sensor_l = '0' and sensor_m = '1' and sensor_r = '0') then
-				TurnType <= std_logic_vector(unsigned(int_TurnType) +1);
+				int_TurnType <= std_logic_vector(unsigned(int_TurnType) +1);
 				check <= '1';
+				TurnType <= int_TurnType;
 			else
 				turnType <= int_turnType;
 			end if;
@@ -80,9 +81,9 @@ turn_found <= '0';
 						new_state <= TURN_RIGHT;
 				elsif (sensor_l = '1' and sensor_m = '1' and sensor_r = '0') then
 						new_state <= SHARP_RIGHT;
-				elsif (sensor_l = '0' and sensor_m = '0' and sensor_r = '0') then
-						turn_found <= '1';
-						new_state <=RESET_STATE;
+				elsif (sensor_l = '0' and sensor_m = '0' and sensor_r = '0' and int_TurnType /= "00") then
+						
+						new_state <=FOUND_TURN;
 				else
 						new_state <= FORWARD;				
 			end if;
@@ -150,6 +151,16 @@ turn_found <= '0';
 			else
 				new_state <= SHARP_RIGHT;
 			end if;
+
+		when FOUND_TURN =>
+			count_reset <= '0';
+			motor_l_reset <= '1';
+			motor_r_reset <= '1';
+			motor_l_direction <= '0';	
+			motor_r_direction <= '0';
+			turn_found <= '1';
+			new_state <= found_turn;
+			
 	end case;
 
 

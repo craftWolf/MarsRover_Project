@@ -37,6 +37,7 @@ architecture mixed of controller is
   signal int_line_finder_reset : std_logic;
   signal int_line_tracker_reset : std_logic;
   signal int_sel : std_logic_vector(1 downto 0);
+  signal int_not_signal : std_logic;
 --TURNER
   signal int_turn_found : std_logic;
   signal int_TurnType : std_logic_vector(1 downto 0);
@@ -219,11 +220,12 @@ lbl5: mux3 port map ( in_track=>int_tracker_vector,
                       s_bit=>int_sel,
                       out_res=>int_mux_out_vector
                       );
+--int_not_signal <= not int_mux_out_vector(4);
 
 count_reset <= int_mux_out_vector(0);
 motor_l_reset <= int_mux_out_vector(1);
 motor_l_direction <= int_mux_out_vector(2);
-motor_r_reset <= int_mux_out_vector(3);
+motor_r_reset <= int_mux_out_vector(4);
 motor_r_direction <= int_mux_out_vector(4);
 
 end architecture;
