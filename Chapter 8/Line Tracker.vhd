@@ -25,7 +25,7 @@ entity line_tracker is
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic;
 		
-		TurnType		: out std_logic_vector (1 downto 0);
+		turn_type		: out   std_logic_vector (1 downto 0);
 		turn_found		: out	std_logic
 	);
 end entity line_tracker;
@@ -33,11 +33,11 @@ end entity line_tracker;
 -- behavioural architecture of controller
 architecture behavioural of line_tracker is
 
-type tracker_controller_state is (RESET_STATE, FORWARD, TURN_LEFT, SHARP_LEFT, TURN_RIGHT, SHARP_RIGHT);
+type tracker_controller_state is (RESET_STATE, FORWARD, TURN_LEFT, SHARP_LEFT, TURN_RIGHT, SHARP_RIGHT, FOUND_TURN);
 
 signal state, new_state : tracker_controller_state;
 signal check: std_logic; --checks whether we have moveded on from the turn signal
-signal int_TurnType: std_logic_vector(1 downto 0); --keeps track of number of turn signals
+signal int_turn_type: std_logic_vector(1 downto 0) := "00"; --keeps track of number of turn signals
 
 begin
 process(clk, reset)
@@ -45,19 +45,18 @@ begin
 		if (rising_edge(clk)) then
 			if (reset = '1' or line_tracker_reset = '1') then
 				state <= RESET_STATE;
-				check <= '0';
-				int_TurnType <= "00";
+				turn_type <= "00";
 			else
 				state <= new_state;
+				turn_type <= int_turn_type;
 			end if;
 		end if;
 end process;
 
-process(state, sensor_l, sensor_m, sensor_r, count_in)
+process(state, sensor_l, sensor_m, sensor_r, count_in, int_turn_type)
 begin 
 
-check <= '0';
-turn_found <= '0';
+    turn_found <= '0';
 	case state is
 		when RESET_STATE => 
 			count_reset <= '1';
@@ -66,12 +65,9 @@ turn_found <= '0';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
 			if (check = '0' and sensor_l = '0' and sensor_m = '1' and sensor_r = '0') then
-				TurnType <= std_logic_vector(unsigned(int_TurnType) +1);
+				int_turn_type <= "01";
 				check <= '1';
-			else
-				turnType <= int_turnType;
 			end if;
-				
 			if (sensor_l = '0' and sensor_m = '0' and sensor_r = '1') then
 				new_state <= TURN_LEFT;
 				elsif (sensor_l = '0' and sensor_m = '1' and sensor_r = '1') then
@@ -80,9 +76,8 @@ turn_found <= '0';
 						new_state <= TURN_RIGHT;
 				elsif (sensor_l = '1' and sensor_m = '1' and sensor_r = '0') then
 						new_state <= SHARP_RIGHT;
-				elsif (sensor_l = '0' and sensor_m = '0' and sensor_r = '0') then
-						turn_found <= '1';
-						new_state <=RESET_STATE;
+				elsif (sensor_l = '0' and sensor_m = '0' and sensor_r = '0' and int_turn_type /= "00") then
+						new_state <= Found_Turn;
 				else
 						new_state <= FORWARD;				
 			end if;
@@ -91,6 +86,7 @@ turn_found <= '0';
 	
 			
 		when FORWARD =>
+            check <= '0';
 			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '0';
@@ -104,6 +100,7 @@ turn_found <= '0';
 	
 
 		when TURN_LEFT =>
+            check <= '0';
 			count_reset <= '0';
 			motor_l_reset <= '1';
 			motor_r_reset <= '0';
@@ -116,6 +113,7 @@ turn_found <= '0';
 			end if;
 	
 		when SHARP_LEFT =>
+            check <= '0';
 			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '0';
@@ -128,6 +126,7 @@ turn_found <= '0';
 			end if;
 	
 		when TURN_RIGHT =>
+            check <= '0';
 			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '1';
@@ -140,6 +139,7 @@ turn_found <= '0';
 			end if;
 	
 		when SHARP_RIGHT =>
+            check <= '0';
 			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '0';
@@ -150,6 +150,16 @@ turn_found <= '0';
 			else
 				new_state <= SHARP_RIGHT;
 			end if;
+
+		when FOUND_TURN => 
+			count_reset <= '1';
+			motor_l_reset <= '1';
+			motor_r_reset <= '1';
+			motor_l_direction <= '1';
+			motor_r_direction <= '1';
+            int_turn_type <= "00";
+			turn_found <= '1';
+			new_state <= FOUND_TURN;
 	end case;
 
 

@@ -15,9 +15,9 @@ begin
   process(s_bit, in_track, in_find, in_turner)
   begin
     case s_bit is
-      when "00" => out_res <= in_find;
       when "01" => out_res <= in_track;
-      when others => out_res <= in_turner;
+      when "10" => out_res <= in_turner;
+      when others => out_res <= in_find;
     end case;
   end process;
 

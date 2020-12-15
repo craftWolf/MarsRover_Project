@@ -9,10 +9,12 @@ entity Main_Controller is
 		reset			: in	std_logic;
 		line_found		: in	std_logic;
 		turn_found		: in 	std_logic;
+        turn_type       : in    std_logic_vector(1 downto 0);
 		turn_complete		: in	std_logic;
 		line_finder_reset 	: out 	std_logic;	-- Used to reset the line finder
 		line_tracker_reset 	: out   std_logic;      -- Used to reset the line tracker, 
-		turn_signal_reset	: out 	std_logic;					
+		turn_signal_reset	: out 	std_logic;	-- Used to reset the turner		
+        turn_type_out       : out   std_logic;
 		sel			: out 	std_logic_vector(1 downto 0)	-- also used when switching from finding to tracking
 	);
 end entity Main_Controller;
@@ -35,7 +37,7 @@ begin
 		end if;
 end process;
 
-process(state, line_found)					-- FSM
+process(state, line_found, turn_found, turn_complete)					-- FSM
 begin 
 	case state is
 		when Reset_state =>
@@ -62,14 +64,14 @@ begin
 			line_tracker_reset <= '0';
 			turn_signal_reset <= '1';
 			sel <= "01";
-			if (turn_found = '1') then
+			if turn_found = '1' then
 				new_state <= turner;
-				
 			else
 				new_state <= Line_Tracker;
 			end if;
 
 		when Turner =>
+            turn_type_out <= '0';
 			line_finder_reset <= '1';
 			line_tracker_reset <= '1';
 			turn_signal_reset <= '0';

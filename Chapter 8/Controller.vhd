@@ -31,18 +31,26 @@ architecture mixed of controller is
 
   -- extra signal needed for the CH7_Line_Finder
   signal int_Line_found	: std_logic;
+
+  -- extra signals needed for the turner ch9/10
+  signal int_turn_found : std_logic;
+  signal int_turn_type  : std_logic_vector(1 downto 0);
+  signal int_turn_type1  : std_logic;
+  signal int_turn_complete : std_logic;
+
+  -- Output vectors of tracker, finder, turner and mux output
   signal int_tracker_vector : std_logic_vector (4 downto 0); -- count_reset, motor_left/right_reset/direction
-  signal int_finder_vector : std_logic_vector (4 downto 0); -- count_reset, motor_left/right_reset/direction
-  signal int_mux_out_vector : std_logic_vector (4 downto 0); -- count_reset, motor_left/right_reset/direction
+  signal int_finder_vector : std_logic_vector (4 downto 0); 
+  signal int_turner_vector : std_logic_vector (4 downto 0);
+  signal int_mux_out_vector : std_logic_vector (4 downto 0); 
+  
+  -- Reset signals of controllers
   signal int_line_finder_reset : std_logic;
   signal int_line_tracker_reset : std_logic;
+  signal int_turner_reset	: std_logic;
+
+  -- select bit
   signal int_sel : std_logic_vector(1 downto 0);
---TURNER
-  signal int_turn_found : std_logic;
-  signal int_TurnType : std_logic_vector(1 downto 0);
-  signal int_turner_reset : std_logic;
-  signal int_turner_vector : std_logic_vector (4 downto 0);
-  signal int_turn_complete : std_logic;
 
   -- Multiplexer
   component mux3 is
@@ -81,7 +89,7 @@ architecture mixed of controller is
 	generic(
   		CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
   	);
-  	port (	clk			: in	std_logic;
+	port (	clk			: in	std_logic;
 		reset			: in	std_logic; -- hard reset
 		line_tracker_reset 	: in 	std_logic; -- reset coming from the main controller
 
@@ -98,9 +106,9 @@ architecture mixed of controller is
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic;
 		
-		TurnType		: out 	std_logic_vector(1 downto 0);
+		turn_type		: out   std_logic_vector (1 downto 0);
 		turn_found		: out	std_logic
-  	);
+	);
   end component line_tracker;
 
   component Main_Controller is
@@ -108,10 +116,12 @@ architecture mixed of controller is
 		reset			: in	std_logic;
 		line_found		: in	std_logic;
 		turn_found		: in 	std_logic;
+        turn_type       : in    std_logic_vector(1 downto 0);
 		turn_complete		: in	std_logic;
 		line_finder_reset 	: out 	std_logic;	-- Used to reset the line finder
 		line_tracker_reset 	: out   std_logic;      -- Used to reset the line tracker, 
-		turn_signal_reset	: out 	std_logic;					
+		turn_signal_reset	: out 	std_logic;	
+        turn_type_out       : out   std_logic;
 		sel			: out 	std_logic_vector(1 downto 0)	-- also used when switching from finding to tracking	);
 	);
 end component Main_Controller;
@@ -121,11 +131,13 @@ end component Main_Controller;
   	);
 	port (	clk			: in	std_logic;
 		reset			: in	std_logic; -- hard reset
-
+		turner_reset 		: in	std_logic; -- reset coming from main controller;
+	
 		sensor_l		: in	std_logic;
 		sensor_m		: in	std_logic;
 		sensor_r		: in	std_logic;
-		TurnType		: in 	std_logic_vector(1 downto 0);
+		
+		turn_type		: in 	std_logic;
 
 		count_in		: in	std_logic_vector (20 downto 0);
 		count_reset		: out	std_logic;
@@ -136,10 +148,9 @@ end component Main_Controller;
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic;
 		
-		turner_reset 		: in 	std_logic; -- reset coming from the main controller
 		turn_complete		: out   std_logic
 	);
-	end component;	
+   end component turner;
   
 
 begin
@@ -152,15 +163,14 @@ lbl1: line_tracker
   					sensor_l => sensor_l,
   					sensor_m => sensor_m,
   					sensor_r => sensor_r,
-  					count_in => count_in,
-					TurnType => int_TurnType,
-					turn_found => int_turn_found,					
-
+  					count_in => count_in,					
   					count_reset => int_tracker_vector(0),
   					motor_l_reset => int_tracker_vector(1),
   					motor_l_direction => int_tracker_vector(2),
   					motor_r_reset => int_tracker_vector(3),
-  					motor_r_direction => int_tracker_vector(4)
+  					motor_r_direction => int_tracker_vector(4),
+					turn_type => int_turn_type,
+					turn_found => int_turn_found
             );
 
 lbl2: line_finder 
@@ -184,12 +194,14 @@ lbl2: line_finder
 lbl3 : Main_Controller port map (	clk			=> clk,
 					reset			=> reset,
 					line_found		=> int_Line_found,
+					turn_found 		=> int_turn_found,
+                    turn_type       => int_turn_type,
+					turn_complete 		=> int_turn_complete,
 					line_finder_reset 	=> int_line_finder_reset,	
 					line_tracker_reset 	=> int_line_tracker_reset,
-					sel			=> int_sel,
-					turn_signal_reset	=> int_turner_reset,
-					turn_found 		=> int_turn_found,
-					turn_complete		=> int_turn_complete
+					turn_signal_reset 	=> int_turner_reset,
+                    turn_type_out => int_turn_type1,
+					sel			=> int_sel
 	);
 
 lbl4: turner 
@@ -201,15 +213,14 @@ lbl4: turner
   					sensor_m => sensor_m,
   					sensor_r => sensor_r,
   					count_in => count_in,
-					TurnType => int_TurnType,
-					turn_complete => int_turn_complete,					
-
+					turn_type => int_turn_type1,
+								
   					count_reset => int_turner_vector(0),
   					motor_l_reset => int_turner_vector(1),
   					motor_l_direction => int_turner_vector(2),
   					motor_r_reset => int_turner_vector(3),
-  					motor_r_direction => int_turner_vector(4)
-
+  					motor_r_direction => int_turner_vector(4), 
+					turn_complete => int_turn_complete	
 	);
 
 
