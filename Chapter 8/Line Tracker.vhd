@@ -37,7 +37,7 @@ type tracker_controller_state is (RESET_STATE, FORWARD, TURN_LEFT, SHARP_LEFT, T
 
 signal state, new_state : tracker_controller_state;
 signal check: std_logic; --checks whether we have moveded on from the turn signal
-signal int_TurnType: std_logic_vector(1 downto 0); --keeps track of number of turn signals
+signal int_TurnType: std_logic_vector(1 downto 0) := "00"; --keeps track of number of turn signals
 
 begin
 process(clk, reset)
@@ -45,10 +45,10 @@ begin
 		if (rising_edge(clk)) then
 			if (reset = '1' or line_tracker_reset = '1') then
 				state <= RESET_STATE;
-				check <= '0';
-				int_TurnType <= "00";
+				turnType <= "00";
 			else
 				state <= new_state;
+				turnType <= int_TurnType;
 			end if;
 		end if;
 end process;
@@ -68,9 +68,6 @@ turn_found <= '0';
 			if (check = '0' and sensor_l = '0' and sensor_m = '1' and sensor_r = '0') then
 				int_TurnType <= std_logic_vector(unsigned(int_TurnType) +1);
 				check <= '1';
-				TurnType <= int_TurnType;
-			else
-				turnType <= int_turnType;
 			end if;
 				
 			if (sensor_l = '0' and sensor_m = '0' and sensor_r = '1') then
