@@ -18,7 +18,7 @@ signal new_CLK : std_logic;
 begin
 
 
-regis : process (clk)
+regis : process (clk, reset)
 		begin
 		-- On rising edge on clock reset the counter or load new value.
 		if (rising_edge(clk)) then

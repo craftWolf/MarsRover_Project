@@ -62,11 +62,16 @@ turn_complete <= '0';
 			motor_r_reset <= '1';
 			motor_l_direction <= '1'; --irrelevant
 			motor_r_direction <= '0'; --irrelevant
-			
-			if (sensor_r = '1' and turn_type = '0') then
-				new_state <= TURN_COMPLETED;
-			else
-                new_state <= SHARP_RIGHT;
+			if (unsigned(count_in) /= 0) then
+                new_state <= RESET_STATE;
+            else
+                if ((sensor_l = '1' and turn_type = '0') or (sensor_r = '1' and turn_type = '1')) then
+                    new_state <= TURN_COMPLETED;
+                elsif (turn_type = '0') then
+                    new_state <= SHARP_RIGHT;
+                else
+                    new_state <= SHARP_LEFT;
+                end if;
             end if;
 	
 		when SHARP_RIGHT =>

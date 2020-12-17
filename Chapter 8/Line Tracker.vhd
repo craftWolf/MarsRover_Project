@@ -40,12 +40,13 @@ signal check: std_logic; --checks whether we have moveded on from the turn signa
 signal int_turn_type: std_logic_vector(1 downto 0) := "00"; --keeps track of number of turn signals
 
 begin
-process(clk, reset)
+process(clk, reset, line_tracker_reset)
 begin
 		if (rising_edge(clk)) then
 			if (reset = '1' or line_tracker_reset = '1') then
 				state <= RESET_STATE;
 				turn_type <= "00";
+                check <= '0';
 			else
 				state <= new_state;
 				turn_type <= int_turn_type;
@@ -53,7 +54,7 @@ begin
 		end if;
 end process;
 
-process(state, sensor_l, sensor_m, sensor_r, count_in, int_turn_type)
+process(state, sensor_l, sensor_m, sensor_r, count_in)
 begin 
 
     turn_found <= '0';
@@ -64,29 +65,37 @@ begin
 			motor_r_reset <= '1';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
-			if (check = '0' and sensor_l = '0' and sensor_m = '1' and sensor_r = '0') then
-				int_turn_type <= "01";
-				check <= '1';
-			end if;
-			if (sensor_l = '0' and sensor_m = '0' and sensor_r = '1') then
-				new_state <= TURN_LEFT;
-				elsif (sensor_l = '0' and sensor_m = '1' and sensor_r = '1') then
-						new_state <= SHARP_LEFT;
-				elsif (sensor_l = '1' and sensor_m = '0' and sensor_r = '0') then
-						new_state <= TURN_RIGHT;
-				elsif (sensor_l = '1' and sensor_m = '1' and sensor_r = '0') then
-						new_state <= SHARP_RIGHT;
-				elsif (sensor_l = '0' and sensor_m = '0' and sensor_r = '0' and int_turn_type /= "00") then
-						new_state <= Found_Turn;
-				else
-						new_state <= FORWARD;				
-			end if;
+            if (unsigned(count_in) /= 0) then
+                new_state <= RESET_STATE;
+            else
+                if (sensor_l = '0' and sensor_m = '1' and sensor_r = '0') then
+                    if (check = '0') then
+                        int_turn_type <= std_logic_vector(unsigned(int_turn_type) + 1);
+                        check <= '1';
+                    end if;
+                    new_state <= FORWARD;
+                else
+                    check <= '0';
+                    if (sensor_l = '0' and sensor_m = '0' and sensor_r = '1') then
+                        new_state <= TURN_LEFT;
+                    elsif (sensor_l = '0' and sensor_m = '1' and sensor_r = '1') then
+                            new_state <= SHARP_LEFT;
+                    elsif (sensor_l = '1' and sensor_m = '0' and sensor_r = '0') then
+                            new_state <= TURN_RIGHT;
+                    elsif (sensor_l = '1' and sensor_m = '1' and sensor_r = '0') then
+                            new_state <= SHARP_RIGHT;
+                    elsif (sensor_l = '0' and sensor_m = '0' and sensor_r = '0' and int_turn_type /= "00") then
+                            new_state <= Found_Turn;
+                    else
+                            new_state <= FORWARD;				
+                    end if;
+                end if;
+            end if;
 			
 		
 	
 			
 		when FORWARD =>
-            check <= '0';
 			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '0';
@@ -100,7 +109,6 @@ begin
 	
 
 		when TURN_LEFT =>
-            check <= '0';
 			count_reset <= '0';
 			motor_l_reset <= '1';
 			motor_r_reset <= '0';
@@ -113,7 +121,6 @@ begin
 			end if;
 	
 		when SHARP_LEFT =>
-            check <= '0';
 			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '0';
@@ -126,7 +133,6 @@ begin
 			end if;
 	
 		when TURN_RIGHT =>
-            check <= '0';
 			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '1';
@@ -139,7 +145,6 @@ begin
 			end if;
 	
 		when SHARP_RIGHT =>
-            check <= '0';
 			count_reset <= '0';
 			motor_l_reset <= '0';
 			motor_r_reset <= '0';
@@ -152,11 +157,11 @@ begin
 			end if;
 
 		when FOUND_TURN => 
-			count_reset <= '1';
 			motor_l_reset <= '1';
 			motor_r_reset <= '1';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
+            check <= '0';
             int_turn_type <= "00";
 			turn_found <= '1';
 			new_state <= FOUND_TURN;

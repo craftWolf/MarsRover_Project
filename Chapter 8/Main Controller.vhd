@@ -44,6 +44,8 @@ begin
 			line_finder_reset <= '1';
 			line_tracker_reset <= '1';
 			turn_signal_reset <= '1';
+            turn_type_out <= '0';
+
 		 	sel <= "00";
 			new_state <= Line_Finder;
 	
@@ -71,7 +73,11 @@ begin
 			end if;
 
 		when Turner =>
-            turn_type_out <= '0';
+            if (turn_type = "01") then
+                turn_type_out <= '0';
+            elsif (turn_type = "10") then
+                turn_type_out <= '1';
+            end if;
 			line_finder_reset <= '1';
 			line_tracker_reset <= '1';
 			turn_signal_reset <= '0';
