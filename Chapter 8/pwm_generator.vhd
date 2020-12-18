@@ -45,10 +45,10 @@ begin
 				-- Transition to PWM_LOW whenever the counter 
 				-- reaches 1ms if direction is left (0)
 				-- reaches 2ms if direction is right (1)
-				if (direction = '0' and (unsigned(count_in) > 100000/CLK_SCALE)) then
+				if (direction = '0' and (unsigned(count_in) >= 100000/CLK_SCALE-1)) then
 					new_state <= PWM_LOW;
 				else 
-					if (direction = '1' and (unsigned(count_in) > 200000/CLK_SCALE)) then
+					if (direction = '1' and (unsigned(count_in) >= 200000/CLK_SCALE-1)) then
 						new_state <= PWM_LOW;
 					else
 						new_state <= PWM_HIGH;

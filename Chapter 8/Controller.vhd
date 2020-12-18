@@ -34,8 +34,7 @@ architecture mixed of controller is
 
   -- extra signals needed for the turner ch9/10
   signal int_turn_found : std_logic;
-  signal int_turn_type  : std_logic_vector(1 downto 0);
-  signal int_turn_type1  : std_logic;
+  signal int_turn_type  : std_logic;
   signal int_turn_complete : std_logic;
 
   -- Output vectors of tracker, finder, turner and mux output
@@ -106,7 +105,7 @@ architecture mixed of controller is
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic;
 		
-		turn_type		: out   std_logic_vector (1 downto 0);
+		turn_type		: out   std_logic;
 		turn_found		: out	std_logic
 	);
   end component line_tracker;
@@ -116,12 +115,10 @@ architecture mixed of controller is
 		reset			: in	std_logic;
 		line_found		: in	std_logic;
 		turn_found		: in 	std_logic;
-        turn_type       : in    std_logic_vector(1 downto 0);
 		turn_complete		: in	std_logic;
 		line_finder_reset 	: out 	std_logic;	-- Used to reset the line finder
 		line_tracker_reset 	: out   std_logic;      -- Used to reset the line tracker, 
 		turn_signal_reset	: out 	std_logic;	
-        turn_type_out       : out   std_logic;
 		sel			: out 	std_logic_vector(1 downto 0)	-- also used when switching from finding to tracking	);
 	);
 end component Main_Controller;
@@ -195,12 +192,10 @@ lbl3 : Main_Controller port map (	clk			=> clk,
 					reset			=> reset,
 					line_found		=> int_Line_found,
 					turn_found 		=> int_turn_found,
-                    turn_type       => int_turn_type,
 					turn_complete 		=> int_turn_complete,
 					line_finder_reset 	=> int_line_finder_reset,	
 					line_tracker_reset 	=> int_line_tracker_reset,
 					turn_signal_reset 	=> int_turner_reset,
-                    turn_type_out => int_turn_type1,
 					sel			=> int_sel
 	);
 
@@ -213,7 +208,7 @@ lbl4: turner
   					sensor_m => sensor_m,
   					sensor_r => sensor_r,
   					count_in => count_in,
-					turn_type => int_turn_type1,
+					turn_type => int_turn_type,
 								
   					count_reset => int_turner_vector(0),
   					motor_l_reset => int_turner_vector(1),

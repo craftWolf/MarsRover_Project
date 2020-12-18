@@ -25,7 +25,7 @@ entity line_tracker is
 		motor_r_reset		: out	std_logic;
 		motor_r_direction	: out	std_logic;
 		
-		turn_type		: out   std_logic_vector (1 downto 0);
+		turn_type		: out   std_logic;
 		turn_found		: out	std_logic
 	);
 end entity line_tracker;
@@ -45,11 +45,9 @@ begin
 		if (rising_edge(clk)) then
 			if (reset = '1' or line_tracker_reset = '1') then
 				state <= RESET_STATE;
-				turn_type <= "00";
                 check <= '0';
 			else
 				state <= new_state;
-				turn_type <= int_turn_type;
 			end if;
 		end if;
 end process;
@@ -65,12 +63,18 @@ begin
 			motor_r_reset <= '1';
 			motor_l_direction <= '1';
 			motor_r_direction <= '1';
-            if (unsigned(count_in) /= 0) then
+            if (unsigned(count_in) >= 2000000/CLK_SCALE) then
                 new_state <= RESET_STATE;
             else
                 if (sensor_l = '0' and sensor_m = '1' and sensor_r = '0') then
                     if (check = '0') then
-                        int_turn_type <= std_logic_vector(unsigned(int_turn_type) + 1);
+                        if (int_turn_type = "00") then
+                            int_turn_type <= "01";
+                            turn_type <= '0';
+                        else 
+                            int_turn_type <= "10";
+                            turn_type <= '1';
+                        end if;
                         check <= '1';
                     end if;
                     new_state <= FORWARD;
@@ -156,7 +160,7 @@ begin
 				new_state <= SHARP_RIGHT;
 			end if;
 
-		when FOUND_TURN => 
+		when FOUND_TURN =>
 			motor_l_reset <= '1';
 			motor_r_reset <= '1';
 			motor_l_direction <= '1';
