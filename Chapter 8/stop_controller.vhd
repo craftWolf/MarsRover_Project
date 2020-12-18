@@ -31,7 +31,7 @@ architecture behavioural of stop_controller is
 type stop_controller_state is (IDLE_STATE, STOP_STATE, RESET_STATE);
 
 signal state, new_state : stop_controller_state;
-signal int_counter : std_logic_vector(6 downto 0);
+signal int_counter : std_logic_vector(7 downto 0);
 
 begin
 
@@ -74,7 +74,7 @@ begin
 				if (unsigned(count_in) >= 2000000/CLK_SCALE) then
 					int_counter <= std_logic_vector(unsigned(int_counter) +1);
 				end if;
-				if (unsigned(int_counter) >= 10) then
+				if (unsigned(int_counter) >= 150) then
 					new_state <= STOP_STATE;
 				else
 					new_state <= IDLE_STATE;

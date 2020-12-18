@@ -118,10 +118,11 @@ architecture mixed of controller is
 		line_found		: in	std_logic;
 		turn_found		: in 	std_logic;
 		turn_complete		: in	std_logic;
+		stop_signal		: in 	std_logic;
 		line_finder_reset 	: out 	std_logic;	-- Used to reset the line finder
 		line_tracker_reset 	: out   std_logic;      -- Used to reset the line tracker, 
-		turn_signal_reset	: out 	std_logic;	
-		sel			: out 	std_logic_vector(1 downto 0)	-- also used when switching from finding to tracking	);
+		turn_signal_reset	: out 	std_logic;	-- Used to reset the turner		
+		sel			: out 	std_logic_vector(1 downto 0)	-- also used when switching from finding to tracking
 	);
 end component Main_Controller;
   component turner is
@@ -218,6 +219,7 @@ lbl3 : Main_Controller port map (	clk			=> clk,
 					line_found		=> int_Line_found,
 					turn_found 		=> int_turn_found,
 					turn_complete 		=> int_turn_complete,
+                    stop_signal     => int_stop_signal,
 					line_finder_reset 	=> int_line_finder_reset,	
 					line_tracker_reset 	=> int_line_tracker_reset,
 					turn_signal_reset 	=> int_turner_reset,
