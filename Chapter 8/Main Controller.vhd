@@ -10,6 +10,7 @@ entity Main_Controller is
 		line_found		: in	std_logic;
 		turn_found		: in 	std_logic;
 		turn_complete		: in	std_logic;
+		stop_signal		: in 	std_logic;
 		line_finder_reset 	: out 	std_logic;	-- Used to reset the line finder
 		line_tracker_reset 	: out   std_logic;      -- Used to reset the line tracker, 
 		turn_signal_reset	: out 	std_logic;	-- Used to reset the turner		
@@ -19,7 +20,7 @@ end entity Main_Controller;
 
 architecture behavioural of Main_Controller is
 
-type Main_Controller_state is (Line_Finder, Line_Tracker, Reset_state, Turner); 	-- Define state type and list all states
+type Main_Controller_state is (Line_Finder, Line_Tracker, Reset_state, Turner, STOP); 	-- Define state type and list all states
 
 signal state, new_state : Main_Controller_state;		-- intermediate signals
 begin
@@ -35,7 +36,7 @@ begin
 		end if;
 end process;
 
-process(state, line_found, turn_found, turn_complete)					-- FSM
+process(state, line_found, turn_found, turn_complete, stop_signal)					-- FSM
 begin 
 	case state is
 		when Reset_state =>
@@ -65,6 +66,8 @@ begin
 			if turn_found = '1' then
 
 				new_state <= turner;
+			elsif (stop_signal = '1') then
+				new_state <= STOP;
 			else
 				new_state <= Line_Tracker;
 			end if;
@@ -80,6 +83,13 @@ begin
 			else
 				new_state <= turner;
 			end if;
+
+		when STOP =>
+			line_finder_reset <= '1';
+			line_tracker_reset <= '1';
+			turn_signal_reset <= '1';
+			sel <= "11";
+			new_state <= STOP;
 	end case;
 
 end process;

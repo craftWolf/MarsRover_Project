@@ -65,6 +65,7 @@ begin
 
 		when STOP_STATE =>
 			stop_signal <= '1';
+			count_reset <= '1';
 
 		when IDLE_STATE =>
 			if (sensor_l /= '1' or sensor_m /= '1' or sensor_r /= '1') then

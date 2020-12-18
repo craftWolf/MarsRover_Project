@@ -36,12 +36,14 @@ architecture mixed of controller is
   signal int_turn_found : std_logic;
   signal int_turn_type  : std_logic;
   signal int_turn_complete : std_logic;
+  signal int_stop_signal	: std_logic;
 
   -- Output vectors of tracker, finder, turner and mux output
-  signal int_tracker_vector : std_logic_vector (4 downto 0); -- count_reset, motor_left/right_reset/direction
-  signal int_finder_vector : std_logic_vector (4 downto 0); 
-  signal int_turner_vector : std_logic_vector (4 downto 0);
-  signal int_mux_out_vector : std_logic_vector (4 downto 0); 
+  signal int_tracker_vector 	: std_logic_vector (4 downto 0); -- count_reset, motor_left/right_reset/direction
+  signal int_finder_vector 	: std_logic_vector (4 downto 0); 
+  signal int_turner_vector 	: std_logic_vector (4 downto 0);
+  signal int_mux_out_vector 	: std_logic_vector (4 downto 0); 
+  signal int_stop_vector	: std_logic_vector (4 downto 0);
   
   -- Reset signals of controllers
   signal int_line_finder_reset : std_logic;
@@ -53,7 +55,7 @@ architecture mixed of controller is
 
   -- Multiplexer
   component mux3 is
-    port (  in_track, in_find, in_turner: in std_logic_vector (4 downto 0);
+    port (  in_track, in_find, in_turner, in_stop: in std_logic_vector (4 downto 0);
             s_bit : in std_logic_vector( 1 downto 0);
             out_res : out std_logic_vector( 4 downto 0));
   end component mux3;
@@ -149,6 +151,29 @@ end component Main_Controller;
 	);
    end component turner;
   
+   component stop_controller is
+	generic(
+  		CLK_SCALE : INTEGER := 10000 -- Lower clock frequency by scale factor
+  	);
+	port (	clk			: in	std_logic;
+		reset			: in	std_logic; -- hard reset
+
+		sensor_l		: in	std_logic;
+		sensor_m		: in	std_logic;
+		sensor_r		: in	std_logic;
+
+		count_in		: in	std_logic_vector (20 downto 0);
+		count_reset		: out	std_logic;
+
+		motor_l_reset		: out	std_logic;
+		motor_l_direction	: out	std_logic;
+
+		motor_r_reset		: out	std_logic;
+		motor_r_direction	: out	std_logic;
+		
+		stop_signal		: out	std_logic
+	);
+   end component stop_controller;
 
 begin
 
@@ -219,12 +244,32 @@ lbl4: turner
 	);
 
 
-lbl5: mux3 port map ( in_track=>int_tracker_vector,
-                      in_find=>int_finder_vector,
-		      in_turner=> int_turner_vector,
-                      s_bit=>int_sel,
-                      out_res=>int_mux_out_vector
+lbl5: mux3 port map ( 	in_track=>int_tracker_vector,
+                      	in_find=>int_finder_vector,
+		      	in_turner=> int_turner_vector,
+			in_stop=> int_stop_vector,
+                      	s_bit=>int_sel,
+                      	out_res=>int_mux_out_vector
+		
                       );
+
+lbl6: stop_controller   generic map(	CLK_SCALE => CLK_SCALE)	
+			port map (	clk => clk,
+  					reset => reset,
+					
+  					sensor_l => sensor_l,
+  					sensor_m => sensor_m,
+  					sensor_r => sensor_r,
+            				count_in => count_in,
+
+           				count_reset => int_stop_vector(0),
+          				motor_l_reset => int_stop_vector(1),
+           				motor_l_direction => int_stop_vector(2),
+        				motor_r_reset => int_stop_vector(3),
+         				motor_r_direction => int_stop_vector(4),
+        				stop_signal => int_stop_signal 
+            );
+
 
 count_reset <= int_mux_out_vector(0);
 motor_l_reset <= int_mux_out_vector(1);
